@@ -71,6 +71,7 @@ export const FEED_SOURCES = {
     { name: 'Crosscut', url: 'https://crosscut.com/rss.xml' },
     { name: 'West Seattle Blog', url: 'https://westseattleblog.com/feed/' },
     { name: 'Spokesman-Review', url: 'https://www.spokesman.com/feeds/stories/' },
+    { name: 'Tacoma Weekly', url: 'https://tacomaweekly.com/feed/' },
   ],
   science: [
     { name: 'NASA', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss' },
