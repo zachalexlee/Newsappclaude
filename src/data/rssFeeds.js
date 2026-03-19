@@ -63,6 +63,8 @@ export const FEED_SOURCES = {
     ],
   },
   local: [
+    { name: 'KIRO 7 Seattle', url: 'https://www.kiro7.com/rss-snd/' },
+    { name: 'KOMO 4 News', url: 'https://komonews.com/news/local.rss' },
     { name: 'Seattle Times', url: 'https://www.seattletimes.com/feed/' },
     { name: 'MyNorthwest', url: 'https://mynorthwest.com/feed/' },
     { name: 'The Stranger', url: 'https://www.thestranger.com/seattle/Rss.xml' },
