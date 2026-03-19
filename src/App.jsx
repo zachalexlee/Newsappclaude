@@ -1,14 +1,29 @@
 import { useState, useEffect } from 'react';
 import TrendingTicker from './components/TrendingTicker';
+import StockTicker from './components/StockTicker';
+import BreakingNewsTicker from './components/BreakingNewsTicker';
 import NewsSection from './components/NewsSection';
 import SportsSection from './components/SportsSection';
 import TechSection from './components/TechSection';
 import FinanceSection from './components/FinanceSection';
+import TrendingListView from './components/TrendingListView';
 import { FEED_SOURCES } from './data/rssFeeds';
 import './App.css';
 
+const SECTION_TABS = [
+  { key: 'world', label: 'World', icon: '☞' },
+  { key: 'politics', label: 'Politics', icon: '⚖' },
+  { key: 'finance', label: 'Finance', icon: '💰' },
+  { key: 'sports', label: 'Sports', icon: '🏆' },
+  { key: 'local', label: 'Local', icon: '⚑' },
+  { key: 'science', label: 'Science', icon: '⚛' },
+  { key: 'tech', label: 'Tech', icon: '💻' },
+  { key: 'trending', label: 'Trending', icon: '𝕏' },
+];
+
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [activeSection, setActiveSection] = useState('world');
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -24,9 +39,90 @@ function App() {
 
   const editionLabel = currentTime.getHours() < 12 ? 'Morning Edition' : 'Evening Edition';
 
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'world':
+        return (
+          <div className="dashboard__row dashboard__row--full">
+            <NewsSection
+              title="World News"
+              icon="&#9758;"
+              feeds={FEED_SOURCES.world}
+              color="#8b0000"
+              maxItems={8}
+            />
+          </div>
+        );
+      case 'politics':
+        return (
+          <div className="dashboard__row dashboard__row--full">
+            <NewsSection
+              title="Politics"
+              icon="&#9878;"
+              feeds={FEED_SOURCES.politics}
+              color="#1a3c6e"
+              maxItems={8}
+            />
+          </div>
+        );
+      case 'finance':
+        return (
+          <div className="dashboard__row dashboard__row--full">
+            <FinanceSection />
+          </div>
+        );
+      case 'sports':
+        return (
+          <div className="dashboard__row dashboard__row--full">
+            <SportsSection />
+          </div>
+        );
+      case 'local':
+        return (
+          <div className="dashboard__row dashboard__row--full">
+            <NewsSection
+              title="Local — WA / South Puget Sound"
+              icon="&#9873;"
+              feeds={FEED_SOURCES.local}
+              color="#b8860b"
+              maxItems={8}
+            />
+          </div>
+        );
+      case 'science':
+        return (
+          <div className="dashboard__row dashboard__row--full">
+            <NewsSection
+              title="Science"
+              icon="&#9883;"
+              feeds={FEED_SOURCES.science}
+              color="#2e7d32"
+              maxItems={8}
+            />
+          </div>
+        );
+      case 'tech':
+        return (
+          <div className="dashboard__row dashboard__row--full">
+            <TechSection />
+          </div>
+        );
+      case 'trending':
+        return (
+          <div className="dashboard__row dashboard__row--full">
+            <TrendingListView />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="app">
       <TrendingTicker />
+      <BreakingNewsTicker />
+      <StockTicker />
 
       <header className="masthead">
         <div className="masthead__top-line">
@@ -43,52 +139,21 @@ function App() {
         <p className="masthead__subtitle">Your Personal News Dashboard</p>
       </header>
 
+      <nav className="section-nav">
+        {SECTION_TABS.map((tab) => (
+          <button
+            key={tab.key}
+            className={`section-nav__tab ${activeSection === tab.key ? 'section-nav__tab--active' : ''}`}
+            onClick={() => setActiveSection(tab.key)}
+          >
+            <span className="section-nav__icon">{tab.icon}</span>
+            {tab.label}
+          </button>
+        ))}
+      </nav>
+
       <main className="dashboard">
-        <div className="dashboard__row dashboard__row--2col">
-          <NewsSection
-            title="World News"
-            icon="&#9758;"
-            feeds={FEED_SOURCES.world}
-            color="#8b0000"
-            maxItems={8}
-          />
-          <NewsSection
-            title="Politics"
-            icon="&#9878;"
-            feeds={FEED_SOURCES.politics}
-            color="#1a3c6e"
-            maxItems={6}
-          />
-        </div>
-
-        <div className="dashboard__row dashboard__row--full">
-          <FinanceSection />
-        </div>
-
-        <div className="dashboard__row dashboard__row--full">
-          <SportsSection />
-        </div>
-
-        <div className="dashboard__row dashboard__row--2col">
-          <NewsSection
-            title="Local — WA / South Puget Sound"
-            icon="&#9873;"
-            feeds={FEED_SOURCES.local}
-            color="#b8860b"
-            maxItems={6}
-          />
-          <NewsSection
-            title="Science"
-            icon="&#9883;"
-            feeds={FEED_SOURCES.science}
-            color="#2e7d32"
-            maxItems={6}
-          />
-        </div>
-
-        <div className="dashboard__row dashboard__row--full">
-          <TechSection />
-        </div>
+        {renderSection()}
       </main>
 
       <footer className="app-footer">
