@@ -74,7 +74,7 @@ export const FEED_SOURCES = {
     { name: 'Tacoma Weekly', url: 'https://tacomaweekly.com/feed/' },
     { name: 'Tacoma Daily Index', url: 'https://www.tacomadailyindex.com/feed/' },
     { name: 'Tacoma News Tribune', url: 'https://www.thenewstribune.com/news/local/index.rss' },
-    { name: 'City of Tacoma Newsroom', url: 'https://tacoma.gov/feed/' },
+    { name: 'City of Tacoma Newsroom', url: 'https://tacoma.gov/tacoma-newsroom/news-list/feed/' },
   ],
   science: [
     { name: 'NASA', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss' },
