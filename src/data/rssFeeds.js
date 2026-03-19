@@ -73,6 +73,8 @@ export const FEED_SOURCES = {
     { name: 'Spokesman-Review', url: 'https://www.spokesman.com/feeds/stories/' },
     { name: 'Tacoma Weekly', url: 'https://tacomaweekly.com/feed/' },
     { name: 'Tacoma Daily Index', url: 'https://www.tacomadailyindex.com/feed/' },
+    { name: 'Tacoma News Tribune', url: 'https://www.thenewstribune.com/news/local/index.rss' },
+    { name: 'City of Tacoma Newsroom', url: 'https://tacoma.gov/feed/' },
   ],
   science: [
     { name: 'NASA', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss' },
