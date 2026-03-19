@@ -11,6 +11,9 @@ export const FEED_SOURCES = {
     { name: 'Bellingcat', url: 'https://www.bellingcat.com/feed/' },
     { name: 'RealClearInvestigations', url: 'https://www.realclearinvestigations.com/index.xml' },
     { name: 'Washington Times', url: 'https://www.washingtontimes.com/rss/headlines/news/' },
+    { name: 'Semafor', url: 'https://www.semafor.com/feed' },
+    { name: 'GroundUp', url: 'https://www.groundup.org.za/feeds/rss/' },
+    { name: 'SAN', url: 'https://san.com/feed/' },
   ],
   politics: [
     { name: 'NPR Politics', url: 'https://feeds.npr.org/1014/rss.xml' },
@@ -19,6 +22,7 @@ export const FEED_SOURCES = {
     { name: 'Fox News Politics', url: 'https://moxie.foxnews.com/google-publisher/politics.xml' },
     { name: 'RealClearPolitics', url: 'https://www.realclearpolitics.com/index.xml' },
     { name: 'Washington Times', url: 'https://www.washingtontimes.com/rss/headlines/news/politics/' },
+    { name: 'The Dispatch', url: 'https://thedispatch.com/feed/' },
   ],
   finance: {
     markets: [
@@ -26,11 +30,13 @@ export const FEED_SOURCES = {
       { name: 'Bloomberg', url: 'https://feeds.bloomberg.com/markets/news.rss' },
       { name: 'MarketWatch', url: 'https://feeds.marketwatch.com/marketwatch/topstories/' },
       { name: 'Yahoo Finance', url: 'https://finance.yahoo.com/news/rssindex' },
+      { name: 'WSJ Markets', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' },
     ],
     economy: [
       { name: 'CNBC Economy', url: 'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20910258' },
       { name: 'Reuters Business', url: 'https://feeds.reuters.com/reuters/businessNews' },
-      { name: 'FT Economy', url: 'https://www.ft.com/rss/home/us' },
+      { name: 'Financial Times', url: 'https://www.ft.com/rss/home/us' },
+      { name: 'WSJ Economy', url: 'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml' },
     ],
     crypto: [
       { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
@@ -73,6 +79,7 @@ export const FEED_SOURCES = {
       { name: 'The Verge AI', url: 'https://www.theverge.com/rss/ai-artificial-intelligence/index.xml' },
       { name: 'VentureBeat AI', url: 'https://venturebeat.com/category/ai/feed/' },
       { name: 'MIT AI News', url: 'https://news.mit.edu/topic/mitartificial-intelligence2-rss.xml' },
+      { name: 'The Rundown AI', url: 'https://www.therundown.ai/feed' },
     ],
     vibeCoding: [
       { name: 'Hacker News', url: 'https://hnrss.org/newest?q=vibe+coding' },
