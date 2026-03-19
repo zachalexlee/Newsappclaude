@@ -6,12 +6,7 @@
 
 .tech-tabs {
   display: flex;
-  gap: 4px;
-  padding: 4px;
-  background: #0d0d20;
-  border-radius: 14px 14px 0 0;
-  border: 1px solid #1e1e3a;
-  border-bottom: none;
+  gap: 0;
 }
 
 .tech-tab {
@@ -21,26 +16,36 @@
   justify-content: center;
   gap: 6px;
   padding: 10px 14px;
-  background: transparent;
-  border: none;
-  color: #888;
+  background: #fafaf5;
+  border: 1px solid #d5d0c4;
+  border-bottom: none;
+  color: #666;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  border-radius: 10px;
   transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.tech-tab:first-child {
+  border-radius: 2px 0 0 0;
+}
+
+.tech-tab:last-child {
+  border-radius: 0 2px 0 0;
 }
 
 .tech-tab:hover {
-  background: #1a1a2e;
-  color: #ccc;
+  background: #f0efe8;
+  color: #333;
 }
 
 .tech-tab--active {
-  background: #1a1a2e;
-  color: #bb86fc;
+  background: #fff;
+  color: #4a148c;
+  border-bottom: 2px solid #4a148c;
 }
 
 .tech-wrapper .news-section {
-  border-radius: 0 0 14px 14px;
+  border-radius: 0 0 2px 2px;
 }

@@ -1,8 +1,8 @@
 .news-section {
-  background: #12122a;
-  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #d5d0c4;
   padding: 20px;
-  border: 1px solid #1e1e3a;
+  border-radius: 2px;
 }
 
 .news-section__header {
@@ -10,44 +10,48 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--section-color, #6c63ff);
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--section-color, #1a1a1a);
 }
 
 .news-section__title {
   margin: 0;
-  font-size: 18px;
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: 20px;
   font-weight: 700;
-  color: #fff;
+  color: #1a1a1a;
   display: flex;
   align-items: center;
   gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .news-section__icon {
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .news-section__refresh {
   background: none;
-  border: 1px solid #333;
-  color: #888;
-  font-size: 18px;
+  border: 1px solid #d5d0c4;
+  color: #999;
+  font-size: 16px;
   cursor: pointer;
   padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: 2px;
   transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
 }
 
 .news-section__refresh:hover {
-  color: var(--section-color, #6c63ff);
-  border-color: var(--section-color, #6c63ff);
+  color: var(--section-color, #1a1a1a);
+  border-color: var(--section-color, #1a1a1a);
 }
 
 .news-section__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 14px;
+  gap: 16px;
 }
 
 .news-section__grid--compact {
@@ -61,15 +65,16 @@
   gap: 12px;
   padding: 30px 0;
   justify-content: center;
-  color: #666;
+  color: #999;
   font-size: 14px;
+  font-family: 'Inter', sans-serif;
 }
 
 .news-section__spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #333;
-  border-top-color: var(--section-color, #6c63ff);
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d5d0c4;
+  border-top-color: var(--section-color, #1a1a1a);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -84,16 +89,18 @@
   gap: 12px;
   padding: 20px;
   justify-content: center;
-  color: #ff6b6b;
+  color: #c0392b;
   font-size: 13px;
+  font-family: 'Inter', sans-serif;
 }
 
 .news-section__error button {
-  background: #ff6b6b;
+  background: #c0392b;
   color: #fff;
   border: none;
   padding: 6px 14px;
-  border-radius: 6px;
+  border-radius: 2px;
   cursor: pointer;
   font-size: 12px;
+  font-family: 'Inter', sans-serif;
 }

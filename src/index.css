@@ -11,10 +11,9 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background: #0a0a1a;
-  color: #e0e0e0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
+  background: #f4f1eb;
+  color: #1a1a1a;
+  font-family: 'Source Serif 4', 'Georgia', 'Times New Roman', serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -29,14 +28,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a1a;
+  background: #f4f1eb;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a2a4a;
+  background: #c4bfb3;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a5a;
+  background: #a09a8e;
 }

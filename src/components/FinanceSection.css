@@ -1,15 +1,15 @@
-.sports-wrapper {
+.finance-wrapper {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-.sports-tabs {
+.finance-tabs {
   display: flex;
   gap: 0;
 }
 
-.sports-tab {
+.finance-tab {
   flex: 1;
   display: flex;
   align-items: center;
@@ -24,28 +24,28 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Georgia', 'Times New Roman', serif;
 }
 
-.sports-tab:first-child {
-  border-radius: 2px 0 0 0;
+.finance-tab:first-child {
+  border-radius: 4px 0 0 0;
 }
 
-.sports-tab:last-child {
-  border-radius: 0 2px 0 0;
+.finance-tab:last-child {
+  border-radius: 0 4px 0 0;
 }
 
-.sports-tab:hover {
+.finance-tab:hover {
   background: #f0efe8;
   color: #333;
 }
 
-.sports-tab--active {
+.finance-tab--active {
   background: #fff;
-  color: #006400;
-  border-bottom: 2px solid #006400;
+  color: #b8860b;
+  border-bottom: 2px solid #b8860b;
 }
 
-.sports-wrapper .news-section {
-  border-radius: 0 0 2px 2px;
+.finance-wrapper .news-section {
+  border-radius: 0 0 4px 4px;
 }
