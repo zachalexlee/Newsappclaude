@@ -65,8 +65,8 @@ export const FEED_SOURCES = {
   local: [
     { name: 'Seattle Times', url: 'https://www.seattletimes.com/feed/' },
     { name: 'KING5 Seattle', url: 'https://rssfeeds.king5.com/king5/home' },
-    { name: 'Tacoma News Tribune', url: 'https://www.thenewstribune.com/news/local/index.rss' },
-    { name: 'The Olympian', url: 'https://www.theolympian.com/news/local/index.rss' },
+    { name: 'Tacoma News Tribune', url: 'https://www.thenewstribune.com/latest-news/index.rss' },
+    { name: 'The Olympian', url: 'https://www.theolympian.com/latest-news/index.rss' },
   ],
   science: [
     { name: 'NASA', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss' },
