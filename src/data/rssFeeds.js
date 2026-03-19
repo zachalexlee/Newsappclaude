@@ -64,9 +64,11 @@ export const FEED_SOURCES = {
   },
   local: [
     { name: 'Seattle Times', url: 'https://www.seattletimes.com/feed/' },
-    { name: 'KING5 Seattle', url: 'https://rssfeeds.king5.com/king5/home' },
-    { name: 'Tacoma News Tribune', url: 'https://www.thenewstribune.com/latest-news/index.rss' },
-    { name: 'The Olympian', url: 'https://www.theolympian.com/latest-news/index.rss' },
+    { name: 'MyNorthwest', url: 'https://mynorthwest.com/feed/' },
+    { name: 'The Stranger', url: 'https://www.thestranger.com/seattle/Rss.xml' },
+    { name: 'Crosscut', url: 'https://crosscut.com/rss.xml' },
+    { name: 'West Seattle Blog', url: 'https://westseattleblog.com/feed/' },
+    { name: 'Spokesman-Review', url: 'https://www.spokesman.com/feeds/stories/' },
   ],
   science: [
     { name: 'NASA', url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss' },
