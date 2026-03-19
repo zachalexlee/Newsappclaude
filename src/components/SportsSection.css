@@ -1,0 +1,46 @@
+.sports-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sports-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: #0d0d20;
+  border-radius: 14px 14px 0 0;
+  border: 1px solid #1e1e3a;
+  border-bottom: none;
+}
+
+.sports-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.sports-tab:hover {
+  background: #1a1a2e;
+  color: #ccc;
+}
+
+.sports-tab--active {
+  background: #1a1a2e;
+  color: #00c853;
+}
+
+.sports-wrapper .news-section {
+  border-radius: 0 0 14px 14px;
+}
