@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { buildFeedUrl } from '../data/rssFeeds';
+import { fetchRssFeed } from '../utils/fetchRss';
 
 export function useNewsFeed(feeds, maxItems = 8) {
   const [articles, setArticles] = useState([]);
@@ -14,10 +14,8 @@ export function useNewsFeed(feeds, maxItems = 8) {
       const feedList = Array.isArray(feeds) ? feeds : [];
       const results = await Promise.allSettled(
         feedList.map(async (feed) => {
-          const res = await fetch(buildFeedUrl(feed.url));
-          if (!res.ok) throw new Error(`Failed to fetch ${feed.name}`);
-          const data = await res.json();
-          return (data.items || []).map((item) => ({
+          const items = await fetchRssFeed(feed.url);
+          return items.map((item) => ({
             ...item,
             sourceName: feed.name,
           }));
@@ -27,10 +25,14 @@ export function useNewsFeed(feeds, maxItems = 8) {
       const allArticles = results
         .filter((r) => r.status === 'fulfilled')
         .flatMap((r) => r.value)
+        .filter((a) => a.title) // skip empty titles
         .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
         .slice(0, maxItems);
 
       setArticles(allArticles);
+      if (allArticles.length === 0) {
+        setError('No articles loaded');
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -40,7 +42,7 @@ export function useNewsFeed(feeds, maxItems = 8) {
 
   useEffect(() => {
     fetchFeeds();
-    const interval = setInterval(fetchFeeds, 5 * 60 * 1000); // refresh every 5 min
+    const interval = setInterval(fetchFeeds, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, [fetchFeeds]);
 

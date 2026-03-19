@@ -1,17 +1,13 @@
-// RSS feed sources organized by category
-// Using rss2json API to convert RSS to JSON (free tier: 10k requests/day)
-const RSS2JSON_BASE = 'https://api.rss2json.com/api.json?rss_url=';
-
 export const FEED_SOURCES = {
   world: [
-    { name: 'Reuters World', url: 'https://feeds.reuters.com/Reuters/worldNews' },
     { name: 'BBC World', url: 'https://feeds.bbci.co.uk/news/world/rss.xml' },
-    { name: 'AP News', url: 'https://rsshub.app/apnews/topics/world-news' },
+    { name: 'NPR World', url: 'https://feeds.npr.org/1004/rss.xml' },
+    { name: 'Al Jazeera', url: 'https://www.aljazeera.com/xml/rss/all.xml' },
   ],
   politics: [
-    { name: 'Reuters Politics', url: 'https://feeds.reuters.com/Reuters/PoliticsNews' },
-    { name: 'BBC Politics', url: 'https://feeds.bbci.co.uk/news/politics/rss.xml' },
+    { name: 'NPR Politics', url: 'https://feeds.npr.org/1014/rss.xml' },
     { name: 'The Hill', url: 'https://thehill.com/feed/' },
+    { name: 'Politico', url: 'https://www.politico.com/rss/politicopicks.xml' },
   ],
   sports: {
     collegeBball: [
@@ -20,7 +16,7 @@ export const FEED_SOURCES = {
     ],
     nfl: [
       { name: 'ESPN NFL', url: 'https://www.espn.com/espn/rss/nfl/news' },
-      { name: 'NFL News', url: 'https://www.cbssports.com/rss/headlines/nfl/' },
+      { name: 'CBS NFL', url: 'https://www.cbssports.com/rss/headlines/nfl/' },
     ],
     nba: [
       { name: 'ESPN NBA', url: 'https://www.espn.com/espn/rss/nba/news' },
@@ -28,37 +24,35 @@ export const FEED_SOURCES = {
     ],
     golf: [
       { name: 'ESPN Golf', url: 'https://www.espn.com/espn/rss/golf/news' },
-      { name: 'Golf Digest', url: 'https://www.golfdigest.com/feed/rss' },
+      { name: 'PGA Tour', url: 'https://www.pgatour.com/news/rss/' },
     ],
   },
   local: [
     { name: 'Seattle Times', url: 'https://www.seattletimes.com/feed/' },
-    { name: 'The Olympian', url: 'https://www.theolympian.com/news/local/rss' },
-    { name: 'Tacoma News Tribune', url: 'https://www.thenewstribune.com/news/local/rss' },
     { name: 'KING5 Seattle', url: 'https://www.king5.com/feeds/syndication/rss/news/local' },
+    { name: 'Tacoma News Tribune', url: 'https://www.thenewstribune.com/news/local/rss' },
+    { name: 'The Olympian', url: 'https://www.theolympian.com/news/local/rss' },
   ],
   science: [
     { name: 'NASA', url: 'https://www.nasa.gov/feed/' },
     { name: 'Science Daily', url: 'https://www.sciencedaily.com/rss/all.xml' },
-    { name: 'Nature', url: 'https://www.nature.com/nature.rss' },
+    { name: 'Phys.org', url: 'https://phys.org/rss-feed/' },
   ],
   tech: {
     ai: [
-      { name: 'MIT AI News', url: 'https://news.mit.edu/topic/mitartificial-intelligence2-rss.xml' },
-      { name: 'VentureBeat AI', url: 'https://venturebeat.com/category/ai/feed/' },
       { name: 'The Verge AI', url: 'https://www.theverge.com/rss/ai-artificial-intelligence/index.xml' },
+      { name: 'VentureBeat AI', url: 'https://venturebeat.com/category/ai/feed/' },
+      { name: 'MIT AI News', url: 'https://news.mit.edu/topic/mitartificial-intelligence2-rss.xml' },
     ],
     vibeCoding: [
       { name: 'Hacker News', url: 'https://hnrss.org/newest?q=vibe+coding' },
-      { name: 'Dev.to', url: 'https://dev.to/feed/tag/ai' },
+      { name: 'Dev.to AI', url: 'https://dev.to/feed/tag/ai' },
+      { name: 'Lobsters', url: 'https://lobste.rs/t/ai.rss' },
     ],
     trending: [
       { name: 'TechCrunch', url: 'https://techcrunch.com/feed/' },
       { name: 'Ars Technica', url: 'https://feeds.arstechnica.com/arstechnica/index' },
+      { name: 'Hacker News Top', url: 'https://hnrss.org/frontpage' },
     ],
   },
 };
-
-export function buildFeedUrl(rssUrl) {
-  return `${RSS2JSON_BASE}${encodeURIComponent(rssUrl)}`;
-}

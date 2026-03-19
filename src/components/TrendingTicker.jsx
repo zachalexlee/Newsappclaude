@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
+import { fetchRssFeed } from '../utils/fetchRss';
 import './TrendingTicker.css';
 
-// Simulated trending tweets about AI/vibe coding from X platform
-// In production, this would use X/Twitter API with bearer token
 const SAMPLE_TRENDING = [
-  { id: 1, text: "Vibe coding is changing how we build software - just describe what you want and AI builds it 🔥", author: "@techdev", likes: "2.4K" },
+  { id: 1, text: "Vibe coding is changing how we build software - just describe what you want and AI builds it", author: "@techdev", likes: "2.4K" },
   { id: 2, text: "Just built an entire SaaS app in 2 hours with Claude Code. Vibe coding is the future.", author: "@aibuilder", likes: "5.1K" },
   { id: 3, text: "Hot take: AI pair programming > solo coding. The productivity gains are insane.", author: "@devops_daily", likes: "3.8K" },
   { id: 4, text: "Claude Opus 4 just dropped and vibe coders are eating good today", author: "@ml_engineer", likes: "8.2K" },
@@ -15,26 +14,28 @@ const SAMPLE_TRENDING = [
 ];
 
 export default function TrendingTicker() {
-  const [tweets, setTweets] = useState(SAMPLE_TRENDING);
   const [feedTweets, setFeedTweets] = useState([]);
 
-  // Try to fetch real trending content from RSS
   useEffect(() => {
     async function fetchTrending() {
       try {
         const sources = [
-          'https://api.rss2json.com/api.json?rss_url=' + encodeURIComponent('https://hnrss.org/newest?q=vibe+coding+OR+AI+coding'),
-          'https://api.rss2json.com/api.json?rss_url=' + encodeURIComponent('https://dev.to/feed/tag/ai'),
+          'https://hnrss.org/newest?q=vibe+coding+OR+AI+coding',
+          'https://dev.to/feed/tag/ai',
+          'https://lobste.rs/t/ai.rss',
         ];
-        const results = await Promise.allSettled(sources.map(u => fetch(u).then(r => r.json())));
+        const results = await Promise.allSettled(
+          sources.map((url) => fetchRssFeed(url))
+        );
         const items = results
-          .filter(r => r.status === 'fulfilled' && r.value.items)
-          .flatMap(r => r.value.items)
-          .slice(0, 10)
+          .filter((r) => r.status === 'fulfilled')
+          .flatMap((r) => r.value)
+          .filter((item) => item.title)
+          .slice(0, 15)
           .map((item, i) => ({
             id: 100 + i,
             text: item.title,
-            author: item.author || item.creator || 'Trending',
+            author: item.author || 'Trending',
             likes: '🔥',
             link: item.link,
           }));
@@ -48,8 +49,7 @@ export default function TrendingTicker() {
     fetchTrending();
   }, []);
 
-  const allTweets = feedTweets.length > 0 ? [...feedTweets, ...tweets] : tweets;
-  // Duplicate for seamless loop
+  const allTweets = feedTweets.length > 0 ? [...feedTweets, ...SAMPLE_TRENDING] : SAMPLE_TRENDING;
   const tickerItems = [...allTweets, ...allTweets];
 
   return (
