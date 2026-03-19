@@ -43,7 +43,43 @@
   color: #888;
   text-transform: uppercase;
   letter-spacing: 3px;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
+}
+
+.masthead__search-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 20px;
+  background: #fafaf5;
+  border: 1px solid #d5d0c4;
+  border-radius: 4px;
+  color: #999;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.masthead__search-btn:hover {
+  border-color: #8b0000;
+  color: #666;
+  background: #fff;
+}
+
+.masthead__search-icon {
+  font-size: 16px;
+}
+
+.masthead__search-shortcut {
+  font-size: 10px;
+  font-weight: 700;
+  background: #e8e4db;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+  color: #888;
 }
 
 /* === SECTION NAV TABS === */

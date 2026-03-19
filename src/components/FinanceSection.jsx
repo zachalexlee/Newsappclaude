@@ -31,7 +31,7 @@ export default function FinanceSection() {
         icon="💰"
         feeds={FEED_SOURCES.finance[activeTab]}
         color="#f5a623"
-        maxItems={6}
+        maxItems={20}
       />
     </div>
   );

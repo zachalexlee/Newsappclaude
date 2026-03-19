@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import TrendingTicker from './components/TrendingTicker';
 import StockTicker from './components/StockTicker';
 import BreakingNewsTicker from './components/BreakingNewsTicker';
@@ -7,6 +7,7 @@ import SportsSection from './components/SportsSection';
 import TechSection from './components/TechSection';
 import FinanceSection from './components/FinanceSection';
 import TrendingListView from './components/TrendingListView';
+import SearchOverlay from './components/SearchOverlay';
 import { FEED_SOURCES } from './data/rssFeeds';
 import './App.css';
 
@@ -24,11 +25,26 @@ const SECTION_TABS = [
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeSection, setActiveSection] = useState('world');
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
+
+  // Keyboard shortcut: Ctrl+K or Cmd+K to open search
+  useEffect(() => {
+    function handleKey(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, []);
+
+  const closeSearch = useCallback(() => setSearchOpen(false), []);
 
   const dateStr = currentTime.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -49,7 +65,7 @@ function App() {
               icon="&#9758;"
               feeds={FEED_SOURCES.world}
               color="#8b0000"
-              maxItems={8}
+              maxItems={20}
             />
           </div>
         );
@@ -61,7 +77,7 @@ function App() {
               icon="&#9878;"
               feeds={FEED_SOURCES.politics}
               color="#1a3c6e"
-              maxItems={8}
+              maxItems={20}
             />
           </div>
         );
@@ -85,7 +101,7 @@ function App() {
               icon="&#9873;"
               feeds={FEED_SOURCES.local}
               color="#b8860b"
-              maxItems={8}
+              maxItems={20}
             />
           </div>
         );
@@ -97,7 +113,7 @@ function App() {
               icon="&#9883;"
               feeds={FEED_SOURCES.science}
               color="#2e7d32"
-              maxItems={8}
+              maxItems={20}
             />
           </div>
         );
@@ -137,6 +153,15 @@ function App() {
         </div>
         <h1 className="masthead__title">The Daily Dispatch</h1>
         <p className="masthead__subtitle">Your Personal News Dashboard</p>
+        <button
+          className="masthead__search-btn"
+          onClick={() => setSearchOpen(true)}
+          title="Search all articles (Ctrl+K)"
+        >
+          <span className="masthead__search-icon">⌕</span>
+          Search articles...
+          <span className="masthead__search-shortcut">Ctrl+K</span>
+        </button>
       </header>
 
       <nav className="section-nav">
@@ -160,6 +185,8 @@ function App() {
         <span>The Daily Dispatch &mdash; Powered by RSS</span>
         <span>Auto-refreshes every 5 minutes</span>
       </footer>
+
+      <SearchOverlay isOpen={searchOpen} onClose={closeSearch} />
     </div>
   );
 }

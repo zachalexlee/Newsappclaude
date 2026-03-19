@@ -32,7 +32,7 @@ export default function SportsSection() {
         icon="🏆"
         feeds={FEED_SOURCES.sports[activeTab]}
         color="#00c853"
-        maxItems={6}
+        maxItems={20}
       />
     </div>
   );

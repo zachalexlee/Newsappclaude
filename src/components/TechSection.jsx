@@ -31,7 +31,7 @@ export default function TechSection() {
         icon="💻"
         feeds={FEED_SOURCES.tech[activeTab]}
         color="#bb86fc"
-        maxItems={6}
+        maxItems={20}
       />
     </div>
   );

@@ -31,6 +31,20 @@
   font-size: 20px;
 }
 
+.news-section__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.news-section__count {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .news-section__refresh {
   background: none;
   border: 1px solid #d5d0c4;
@@ -103,4 +117,96 @@
   cursor: pointer;
   font-size: 12px;
   font-family: 'Inter', sans-serif;
+}
+
+/* === LOAD MORE / ARCHIVE === */
+.news-section__archive-toggle {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed #d5d0c4;
+  text-align: center;
+}
+
+.news-section__load-more {
+  background: none;
+  border: 1px solid #d5d0c4;
+  color: #666;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 24px;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+}
+
+.news-section__load-more:hover {
+  color: var(--section-color, #1a1a1a);
+  border-color: var(--section-color, #1a1a1a);
+  background: #fafaf5;
+}
+
+.news-section__archive {
+  margin-top: 16px;
+  border-top: 1px solid #d5d0c4;
+  padding-top: 16px;
+}
+
+.news-section__archive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.news-section__archive-title {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.news-section__archive-search {
+  padding: 6px 12px;
+  border: 1px solid #d5d0c4;
+  border-radius: 2px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #333;
+  background: #fafaf5;
+  outline: none;
+  min-width: 200px;
+  transition: border-color 0.2s;
+}
+
+.news-section__archive-search:focus {
+  border-color: var(--section-color, #1a1a1a);
+}
+
+.news-section__archive-search::placeholder {
+  color: #aaa;
+}
+
+.news-section__archive-list {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #e8e4db;
+  border-radius: 2px;
+  padding: 8px;
+  background: #fafaf5;
+}
+
+.news-section__archive-empty {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
 }
