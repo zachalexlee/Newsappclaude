@@ -1,65 +1,62 @@
-// Multiple CORS proxy strategies for fetching RSS feeds
-const PROXY_STRATEGIES = [
-  // Strategy 1: rss2json (returns JSON directly)
+// CORS proxy strategies — we race them all in parallel for speed
+const PROXY_BUILDERS = [
+  // rss2json: dedicated RSS-to-JSON service
   {
     name: 'rss2json',
     buildUrl: (rssUrl) =>
       `https://api.rss2json.com/api.json?rss_url=${encodeURIComponent(rssUrl)}`,
-    parse: async (response) => {
-      const data = await response.json();
-      if (data.status !== 'ok' && !data.items) throw new Error('rss2json failed');
-      return (data.items || []).map((item) => ({
-        title: item.title,
-        link: item.link,
-        description: item.description || item.content || '',
-        pubDate: item.pubDate,
-        thumbnail: item.thumbnail || item.enclosure?.link || '',
-        author: item.author || '',
-      }));
-    },
+    isJson: true,
   },
-  // Strategy 2: allorigins (returns raw XML, we parse it)
+  // allorigins: general CORS proxy (returns raw content)
   {
     name: 'allorigins',
     buildUrl: (rssUrl) =>
       `https://api.allorigins.win/raw?url=${encodeURIComponent(rssUrl)}`,
-    parse: async (response) => {
-      const text = await response.text();
-      return parseRssXml(text);
-    },
+    isJson: false,
   },
-  // Strategy 3: corsproxy.io
+  // corsproxy.io
   {
     name: 'corsproxy',
     buildUrl: (rssUrl) =>
-      `https://corsproxy.io/?${encodeURIComponent(rssUrl)}`,
-    parse: async (response) => {
-      const text = await response.text();
-      return parseRssXml(text);
-    },
+      `https://corsproxy.io/?url=${encodeURIComponent(rssUrl)}`,
+    isJson: false,
   },
-  // Strategy 4: cors-anywhere on herokuapp (may need activation)
+  // codetabs proxy
   {
-    name: 'thingproxy',
+    name: 'codetabs',
     buildUrl: (rssUrl) =>
       `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(rssUrl)}`,
-    parse: async (response) => {
-      const text = await response.text();
-      return parseRssXml(text);
-    },
+    isJson: false,
   },
 ];
 
+// Parse rss2json JSON response
+function parseRss2JsonResponse(data) {
+  if (data.status !== 'ok' && !data.items) throw new Error('rss2json failed');
+  return (data.items || []).map((item) => ({
+    title: item.title || '',
+    link: item.link || '',
+    description: item.description || item.content || '',
+    pubDate: item.pubDate || '',
+    thumbnail: item.thumbnail || item.enclosure?.link || '',
+    author: item.author || '',
+  }));
+}
+
 // Parse RSS/Atom XML into article objects
 function parseRssXml(xmlText) {
+  // Sometimes proxies return HTML error pages
+  if (xmlText.trim().startsWith('<!DOCTYPE') || xmlText.trim().startsWith('<html')) {
+    throw new Error('Got HTML instead of XML');
+  }
+
   const parser = new DOMParser();
   const doc = parser.parseFromString(xmlText, 'text/xml');
 
-  // Check for parse errors
   const parseError = doc.querySelector('parsererror');
   if (parseError) throw new Error('XML parse error');
 
-  // Try RSS 2.0 format first
+  // Try RSS 2.0 format
   let items = doc.querySelectorAll('item');
   if (items.length > 0) {
     return Array.from(items).map((item) => {
@@ -72,13 +69,14 @@ function parseRssXml(xmlText) {
         title: getTagText(item, 'title'),
         link: getTagText(item, 'link'),
         description: getTagText(item, 'description'),
-        pubDate: getTagText(item, 'pubDate') || getTagText(item, 'dc:date'),
+        pubDate: getTagText(item, 'pubDate') || getTagText(item, 'dc\\:date'),
         thumbnail:
           mediaThumbnail?.getAttribute('url') ||
           enclosure?.getAttribute('url') ||
           extractImageFromHtml(getTagText(item, 'description')) ||
+          extractImageFromHtml(getTagText(item, 'content\\:encoded')) ||
           '',
-        author: getTagText(item, 'author') || getTagText(item, 'dc:creator') || '',
+        author: getTagText(item, 'author') || getTagText(item, 'dc\\:creator') || '',
       };
     });
   }
@@ -117,28 +115,47 @@ function extractImageFromHtml(html) {
   return match ? match[1] : '';
 }
 
-// Fetch a single RSS feed, trying multiple proxy strategies
-export async function fetchRssFeed(rssUrl) {
-  for (const strategy of PROXY_STRATEGIES) {
-    try {
-      const url = strategy.buildUrl(rssUrl);
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
+// Fetch via a single proxy with timeout
+async function fetchViaProxy(proxy, rssUrl, timeoutMs = 10000) {
+  const url = proxy.buildUrl(rssUrl);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
 
-      const response = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeout);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
 
-      if (!response.ok) continue;
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-      const articles = await strategy.parse(response);
-      if (articles && articles.length > 0) {
-        return articles;
-      }
-    } catch {
-      // Try next strategy
-      continue;
+    if (proxy.isJson) {
+      const data = await response.json();
+      return parseRss2JsonResponse(data);
+    } else {
+      const text = await response.text();
+      return parseRssXml(text);
     }
+  } catch (err) {
+    clearTimeout(timer);
+    throw err;
   }
+}
 
-  return []; // All strategies failed
+// Race all proxies in parallel — first one to return valid articles wins
+export async function fetchRssFeed(rssUrl) {
+  try {
+    const results = await Promise.any(
+      PROXY_BUILDERS.map((proxy) =>
+        fetchViaProxy(proxy, rssUrl).then((articles) => {
+          if (!articles || articles.length === 0) {
+            throw new Error('No articles from ' + proxy.name);
+          }
+          return articles;
+        })
+      )
+    );
+    return results;
+  } catch {
+    // All proxies failed
+    return [];
+  }
 }
