@@ -1,13 +1,13 @@
-// CORS proxy strategies — we race them all in parallel for speed
+// CORS proxy strategies — ordered by reliability/speed
 const PROXY_BUILDERS = [
-  // rss2json: dedicated RSS-to-JSON service
+  // rss2json: dedicated RSS-to-JSON service (fastest, most reliable)
   {
     name: 'rss2json',
     buildUrl: (rssUrl) =>
       `https://api.rss2json.com/api.json?rss_url=${encodeURIComponent(rssUrl)}`,
     isJson: true,
   },
-  // allorigins: general CORS proxy (returns raw content)
+  // allorigins: general CORS proxy
   {
     name: 'allorigins',
     buildUrl: (rssUrl) =>
@@ -21,14 +21,11 @@ const PROXY_BUILDERS = [
       `https://corsproxy.io/?url=${encodeURIComponent(rssUrl)}`,
     isJson: false,
   },
-  // codetabs proxy
-  {
-    name: 'codetabs',
-    buildUrl: (rssUrl) =>
-      `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(rssUrl)}`,
-    isJson: false,
-  },
 ];
+
+// In-memory cache: url -> { data, timestamp }
+const feedCache = new Map();
+const CACHE_TTL = 3 * 60 * 1000; // 3 minutes
 
 // Parse rss2json JSON response
 function parseRss2JsonResponse(data) {
@@ -45,7 +42,6 @@ function parseRss2JsonResponse(data) {
 
 // Parse RSS/Atom XML into article objects
 function parseRssXml(xmlText) {
-  // Sometimes proxies return HTML error pages
   if (xmlText.trim().startsWith('<!DOCTYPE') || xmlText.trim().startsWith('<html')) {
     throw new Error('Got HTML instead of XML');
   }
@@ -115,8 +111,8 @@ function extractImageFromHtml(html) {
   return match ? match[1] : '';
 }
 
-// Fetch via a single proxy with timeout
-async function fetchViaProxy(proxy, rssUrl, timeoutMs = 10000) {
+// Fetch via a single proxy with timeout (reduced to 6s)
+async function fetchViaProxy(proxy, rssUrl, timeoutMs = 6000) {
   const url = proxy.buildUrl(rssUrl);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -140,8 +136,14 @@ async function fetchViaProxy(proxy, rssUrl, timeoutMs = 10000) {
   }
 }
 
-// Race all proxies in parallel — first one to return valid articles wins
+// Race all proxies — first valid result wins, with in-memory caching
 export async function fetchRssFeed(rssUrl) {
+  // Check memory cache first
+  const cached = feedCache.get(rssUrl);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.data;
+  }
+
   try {
     const results = await Promise.any(
       PROXY_BUILDERS.map((proxy) =>
@@ -153,9 +155,11 @@ export async function fetchRssFeed(rssUrl) {
         })
       )
     );
+
+    // Cache successful result
+    feedCache.set(rssUrl, { data: results, timestamp: Date.now() });
     return results;
   } catch {
-    // All proxies failed
     return [];
   }
 }

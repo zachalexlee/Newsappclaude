@@ -42,12 +42,17 @@ function deduplicateArticles(articles) {
   });
 }
 
+function sortByDate(articles) {
+  return articles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+}
+
 export function useNewsFeed(feeds, maxItems = 20) {
   const [articles, setArticles] = useState([]);
   const [archived, setArchived] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const mountedRef = useRef(true);
+  const freshArticlesRef = useRef([]);
 
   const archiveKey = getArchiveKey(feeds);
 
@@ -56,80 +61,84 @@ export function useNewsFeed(feeds, maxItems = 20) {
     return () => { mountedRef.current = false; };
   }, []);
 
-  // Load archive on mount
+  // INSTANT: Show cached articles immediately on mount (no network wait)
   useEffect(() => {
-    const saved = loadArchive(archiveKey);
-    if (saved.length > 0) {
-      setArchived(saved);
+    const cached = loadArchive(archiveKey);
+    if (cached.length > 0) {
+      const sorted = sortByDate(cached);
+      setArticles(sorted.slice(0, maxItems));
+      setArchived(sorted.slice(maxItems));
+      setLoading(false); // No spinner if we have cached data
     }
-  }, [archiveKey]);
+  }, [archiveKey, maxItems]);
 
   const fetchFeeds = useCallback(async () => {
-    setLoading(true);
+    const feedList = Array.isArray(feeds) ? feeds : [];
+    if (feedList.length === 0) {
+      setError('No feeds configured');
+      setLoading(false);
+      return;
+    }
+
+    // Only show spinner if we have zero articles (first visit)
     setError(null);
+    freshArticlesRef.current = [];
 
-    try {
-      const feedList = Array.isArray(feeds) ? feeds : [];
-      if (feedList.length === 0) {
-        setError('No feeds configured');
-        setLoading(false);
-        return;
-      }
-
-      const results = await Promise.allSettled(
-        feedList.map(async (feed) => {
-          try {
-            const items = await fetchRssFeed(feed.url);
-            if (items.length === 0) {
-              console.warn(`[RSS] No items from: ${feed.name} (${feed.url})`);
-            }
-            return items.map((item) => ({
-              ...item,
-              sourceName: feed.name,
-              archivedAt: new Date().toISOString(),
-            }));
-          } catch (err) {
-            console.warn(`[RSS] Failed: ${feed.name}:`, err.message);
-            return [];
-          }
-        })
-      );
-
+    // PROGRESSIVE: Fire off all feeds, update UI as each one resolves
+    const updateFromFresh = () => {
       if (!mountedRef.current) return;
 
-      const freshArticles = results
-        .filter((r) => r.status === 'fulfilled')
-        .flatMap((r) => r.value)
-        .filter((a) => a.title);
-
-      // Merge fresh with existing archive, deduplicate, sort by date
       const previousArchive = loadArchive(archiveKey);
-      const merged = deduplicateArticles([...freshArticles, ...previousArchive])
-        .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+      const merged = deduplicateArticles([
+        ...freshArticlesRef.current,
+        ...previousArchive,
+      ]);
+      const sorted = sortByDate(merged);
 
-      // Save full merged set to archive
-      saveArchive(archiveKey, merged);
+      setArticles(sorted.slice(0, maxItems));
+      setArchived(sorted.slice(maxItems));
+    };
 
-      // Visible = top N, archived = the rest
-      const visible = merged.slice(0, maxItems);
-      const rest = merged.slice(maxItems);
+    const feedPromises = feedList.map(async (feed) => {
+      try {
+        const items = await fetchRssFeed(feed.url);
+        if (items.length === 0) return;
 
-      setArticles(visible);
-      setArchived(rest);
+        const tagged = items.map((item) => ({
+          ...item,
+          sourceName: feed.name,
+          archivedAt: new Date().toISOString(),
+        }));
 
-      if (visible.length === 0) {
-        setError('Unable to load feeds — check connection and retry');
-      } else {
-        setError(null);
+        // Add to accumulator and trigger UI update
+        freshArticlesRef.current = [...freshArticlesRef.current, ...tagged];
+        updateFromFresh();
+      } catch (err) {
+        console.warn(`[RSS] Failed: ${feed.name}:`, err.message);
       }
-    } catch (err) {
-      if (mountedRef.current) {
-        setError(err.message);
-      }
-    } finally {
-      if (mountedRef.current) {
-        setLoading(false);
-      }
+    });
+
+    // Wait for all to settle, then do final save
+    await Promise.allSettled(feedPromises);
+
+    if (!mountedRef.current) return;
+
+    // Final merge and persist
+    const previousArchive = loadArchive(archiveKey);
+    const finalMerged = deduplicateArticles([
+      ...freshArticlesRef.current,
+      ...previousArchive,
+    ]);
+    const sorted = sortByDate(finalMerged);
+
+    saveArchive(archiveKey, sorted);
+
+    setArticles(sorted.slice(0, maxItems));
+    setArchived(sorted.slice(maxItems));
+    setLoading(false);
+
+    if (sorted.length === 0) {
+      setError('Unable to load feeds — check connection and retry');
     }
   }, [feeds, maxItems, archiveKey]);
 
