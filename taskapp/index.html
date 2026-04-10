@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tasks</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="taskapp">
+      <header class="taskapp__header">
+        <h1 class="taskapp__title">Tasks</h1>
+        <p class="taskapp__subtitle">A simple place to keep track of things to do.</p>
+      </header>
+
+      <form id="task-form" class="taskapp__form" autocomplete="off">
+        <input
+          id="task-input"
+          class="taskapp__input"
+          type="text"
+          placeholder="What needs doing?"
+          required
+        />
+        <button type="submit" class="taskapp__add">Add</button>
+      </form>
+
+      <div class="taskapp__filters" id="filters">
+        <button type="button" class="taskapp__filter taskapp__filter--active" data-filter="all">All</button>
+        <button type="button" class="taskapp__filter" data-filter="active">Active</button>
+        <button type="button" class="taskapp__filter" data-filter="completed">Completed</button>
+      </div>
+
+      <ul id="task-list" class="taskapp__list"></ul>
+
+      <footer class="taskapp__footer">
+        <span id="task-count">0 tasks remaining</span>
+        <button type="button" id="clear-completed" class="taskapp__clear" hidden>
+          Clear completed
+        </button>
+      </footer>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

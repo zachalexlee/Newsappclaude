@@ -1,0 +1,207 @@
+:root {
+  color-scheme: light dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+.taskapp {
+  max-width: 560px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: #1e293b;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.taskapp__header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.taskapp__title {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.taskapp__subtitle {
+  margin: 0.25rem 0 0;
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+.taskapp__form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.taskapp__input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: #e2e8f0;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.taskapp__input:focus {
+  border-color: #3b82f6;
+}
+
+.taskapp__add {
+  padding: 0 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: #3b82f6;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.taskapp__add:hover {
+  background: #2563eb;
+}
+
+.taskapp__filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.taskapp__filter {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  background: transparent;
+  border: 1px solid #334155;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.taskapp__filter:hover {
+  border-color: #64748b;
+}
+
+.taskapp__filter--active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.taskapp__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.taskapp__empty {
+  padding: 1.5rem;
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+}
+
+.taskapp__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  transition: border-color 0.15s ease;
+}
+
+.taskapp__item:hover {
+  border-color: #475569;
+}
+
+.taskapp__label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.taskapp__label input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3b82f6;
+  cursor: pointer;
+}
+
+.taskapp__text {
+  font-size: 1rem;
+  word-break: break-word;
+}
+
+.taskapp__item--done .taskapp__text {
+  text-decoration: line-through;
+  color: #64748b;
+}
+
+.taskapp__delete {
+  width: 28px;
+  height: 28px;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.taskapp__delete:hover {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.taskapp__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #334155;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.taskapp__clear {
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.taskapp__clear:hover {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+}
